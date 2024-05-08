@@ -1,6 +1,6 @@
 #include "MoveHandler.h"
 bool equalMove(Move a, Move b) {
-    return a.x == b.x && b.y == b.x;
+    return a.x == b.x && a.y == b.y;
 }
 
 
@@ -47,19 +47,14 @@ bool equalMove(Move a, Move b) {
      deselect(moveHandler);
  }
 
-void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {//TODO
+void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {//TODO mega sraka
    
     if (!moveHandler->isSelected) {
         Move source = getCurrentMove(window,moveHandler->event);
+
         if (source.x == -1) return;
         moveHandler->source = source;
-        moveHandler->isSelected = true;
-    }
-    else {
-        Move destination = getCurrentMove(window,moveHandler->event);
-        if (destination.x == -1 || equalMove(moveHandler->destination, moveHandler->source)) return;
-        moveHandler->destination = destination;
         moveHandler->isSelected = false;
-        moveHandler->isDone = true;
     }
+
 }

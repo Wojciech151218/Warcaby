@@ -5,7 +5,7 @@ struct Move {
 	int x, y;
 }typedef Move;
 
-struct MoveHanlder {
+struct MoveHandler {
 	Move source;
 	Move destination;
 	bool isSelected;
@@ -15,6 +15,6 @@ struct MoveHanlder {
 
 bool equalMove(Move a, Move b);
 Move getCurrentMove(sfRenderWindow* window, sfEvent * event);
-void deselect(MoveHandler * moveHanlder);
-void handleMove(MoveHandler* moveHanlder, sfRenderWindow* window);
+void deselect(MoveHandler * moveHandler);
+void handleMove(MoveHandler* moveHandler, sfRenderWindow* window);
 void initializeMoveHandler(MoveHandler* moveHandler, sfEvent* event);
