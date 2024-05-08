@@ -1,0 +1,1 @@
+ "C:/Users/Wojciech/CLionProjects/Warcaby/CSFML/lib/msvc/csfml-window.lib" "C:/Users/Wojciech/CLionProjects/Warcaby/CSFML/lib/msvc/csfml-graphics.lib" "C:/Users/Wojciech/CLionProjects/Warcaby/CSFML/lib/msvc/csfml-system.lib" -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

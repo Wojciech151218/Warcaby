@@ -1,0 +1,3 @@
+"D:\CLion 2024.1.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\Warcaby.dir/objects.a
+"D:\CLion 2024.1.1\bin\mingw\bin\ar.exe" qc CMakeFiles\Warcaby.dir/objects.a @CMakeFiles\Warcaby.dir\objects1.rsp
+"D:\CLion 2024.1.1\bin\mingw\bin\gcc.exe" -g -Wl,--whole-archive CMakeFiles\Warcaby.dir/objects.a -Wl,--no-whole-archive -o Warcaby.exe -Wl,--out-implib,libWarcaby.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Warcaby.dir\linkLibs.rsp

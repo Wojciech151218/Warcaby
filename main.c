@@ -1,18 +1,28 @@
-#include <SFML/Window.h>
 #include <SFML/Graphics.h>
-
-
+#include "Displayer.h"
+#include "Auxilary.h"
+#include "GameLogicHandler.h"
 int main()
 {
-    sfVideoMode mode = {800, 600, 32};
+    sfVideoMode mode = { WINDOW_SIZE, WINDOW_SIZE, 64 };
     sfRenderWindow* window;
     sfEvent event;
+    Board * board = getStarterBoard();
+    Displayer displayer = initialize(board);
+    MoveHandler moveHandler;
+    initializeMoveHandler(&moveHandler,&event);
+    GameLogicHandler gameLogicHandler;
+    initializeGameLogicHandler(&gameLogicHandler,board);
+
 
     // Create the main window
     window = sfRenderWindow_create(mode, "CSFML window", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
+    // Create a circle
+
+    // Start the game loop
     while (sfRenderWindow_isOpen(window))
     {
         // Process events
@@ -23,14 +33,19 @@ int main()
                 sfRenderWindow_close(window);
         }
 
-        // Clear screen
-        sfRenderWindow_clear(window, sfBlack);
 
-        // Update the window
-        sfRenderWindow_display(window);
+
+        handleMove(&moveHandler,window);
+        display(displayer, window, moveHandler);
+        if (isMoveLegal(&gameLogicHandler, moveHandler)) {
+            executeMove(&gameLogicHandler, moveHandler);
+            deselect(&moveHandler);
+        }
+
     }
 
-    // Cleanup resources
+
     sfRenderWindow_destroy(window);
+
     return 0;
 }
