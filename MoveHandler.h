@@ -4,12 +4,14 @@
 struct Move {
 	int x, y;
 }typedef Move;
+enum MoveState{
+    Pending,Selected,Finished
+}typedef MoveState;
 
 struct MoveHandler {
 	Move source;
 	Move destination;
-	bool isSelected;
-	bool isDone;
+    MoveState moveState;
 	sfEvent* event;
 }typedef MoveHandler;
 

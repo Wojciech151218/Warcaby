@@ -36,9 +36,9 @@ int main()
 
 
         handleMove(&moveHandler,window);
-        printf("%d,%d \n",moveHandler.source.x,moveHandler.source.y);
+
         display(displayer, window, moveHandler);
-        if (isMoveLegal(&gameLogicHandler, moveHandler)) {
+        if (isMoveValid(&gameLogicHandler,&moveHandler) && isMoveLegal(&gameLogicHandler, moveHandler)) {
             executeMove(&gameLogicHandler, moveHandler);
             deselect(&moveHandler);
         }

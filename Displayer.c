@@ -33,7 +33,6 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHanlde
 			sfCircleShape_setRadius(circles[circlesIndex], WINDOW_SIZE / BOARD_SIZE / 2);
 			sfCircleShape_setPosition(circles[circlesIndex], (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
 
-            printf("%d,%d \n",selectedToMove.x,selectedToMove.y);
 
 			if (displayer.board->pieces[i][j]->colour == Black)
 				sfCircleShape_setFillColor(circles[circlesIndex++], equalMove(selectedToMove,(Move){i,j}) ?

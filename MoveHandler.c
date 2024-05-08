@@ -37,24 +37,36 @@ bool equalMove(Move a, Move b) {
 }
 
  void deselect(MoveHandler * moveHandler) {
-     moveHandler->isSelected = false;
-     moveHandler->isDone = false;
+     moveHandler->moveState = Pending;
+
      moveHandler->source = (Move){ -1, -1 };
      moveHandler->destination = (Move){ -1, -1 };
+
  }
  void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
      moveHandler->event = event;
      deselect(moveHandler);
  }
 
-void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {//TODO mega sraka
-   
-    if (!moveHandler->isSelected) {
-        Move source = getCurrentMove(window,moveHandler->event);
+void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {
+    Move move = getCurrentMove(window,moveHandler->event);
+    if(move.x == -1) return;
 
-        if (source.x == -1) return;
-        moveHandler->source = source;
-        moveHandler->isSelected = false;
+    switch (moveHandler->moveState) {
+        case Pending:
+            if(equalMove(move,moveHandler->source)) return;
+            moveHandler->source = move;
+            moveHandler->moveState = Selected;
+            break;
+        case Selected:
+            if(equalMove(move,moveHandler->destination)) return;
+            moveHandler->destination = move;
+            moveHandler->moveState = Finished;
+            break;
+        case Finished:
+
+            break;
     }
+
 
 }
