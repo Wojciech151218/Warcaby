@@ -7,4 +7,5 @@ struct Board {
 } typedef Board;
 
 Board * getStarterBoard();
+Board copyBoard(Board board);
 void printBoard(Board board);

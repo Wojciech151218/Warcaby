@@ -35,7 +35,15 @@ Board * getStarterBoard() {
 	}
 	return result;
 }
-void printBoard(Board board) {
+Board copyBoard(Board board){
+    Board result;
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j)
+            result.pieces[i][j] = board.pieces[i][j];
+    }
+    return result;
+}
+void printBoard(Board board) {//TODO można to zmodyfikowac w zapisywacz plików
 	system("cls");
 	for (size_t i = 0; i < BOARD_SIZE; i++)
 	{

@@ -2,6 +2,9 @@
 bool equalSquare(Square a, Square b) {
     return a.x == b.x && a.y == b.y;
 }
+Square multiplySquare(Square a,int factor){
+    return (Square){a.x*factor,a.y*factor};
+}
 Square minusSquare(Square a, Square b) {
     return (Square){a.x-b.x,a.y-b.y};
 }

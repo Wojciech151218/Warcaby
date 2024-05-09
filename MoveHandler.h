@@ -24,6 +24,7 @@ Piece * getPiece(Board board, Square move);
 bool equalSquare(Square a, Square b);
 Square minusSquare(Square a, Square b);
 Square plusSquare(Square a, Square b);
+Square multiplySquare(Square a,int factor);
 int distanceBetweenSquares(Square a, Square b);
 
 Square getCurrentSquare(sfRenderWindow* window, sfEvent * event);
