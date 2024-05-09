@@ -3,11 +3,16 @@ bool equalSquare(Square a, Square b) {
     return a.x == b.x && a.y == b.y;
 }
 Square minusSquare(Square a, Square b) {
-    return (Square){a.x-b.x,a.x-b.x};
+    return (Square){a.x-b.x,a.y-b.y};
 }
 Square plusSquare(Square a, Square b) {
-    return (Square){a.x+b.x,a.x+b.x};
+    return (Square){a.x+b.x,a.y+b.y};
 }
+int distanceBetweenSquares(Square a, Square b){
+    return abs(a.x-b.x);
+}
+
+
 
  Square getCurrentSquare(sfRenderWindow* window, sfEvent * event) {
 
@@ -41,6 +46,7 @@ Square plusSquare(Square a, Square b) {
 
  }
  void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
+     printf("MoveHandler initialized\n");
      moveHandler->event = event;
      deselect(moveHandler);
  }
@@ -56,6 +62,7 @@ void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {
     if(!moveHandler->pieceSelected && piece){
         moveHandler->source = square;
         moveHandler->pieceSelected = piece;
+
         //piece->isSelected = true;
         return;
     }
@@ -67,5 +74,6 @@ void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {
 
 }
 Piece * getPiece(Board board, Square square){
+    if(square.x<0 || square.y< 0 || square.x >= BOARD_SIZE || square.y >= BOARD_SIZE) return NULL;
     return board.pieces[square.x][square.y];
 }

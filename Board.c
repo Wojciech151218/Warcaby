@@ -1,7 +1,7 @@
 #include "Board.h"
 
 Board * getStarterBoard() {
-	
+    printf("Board initialized\n");
 	Board * result = (Board*)malloc(sizeof(Board));
 	
 	int whiteLevel = (BOARD_SIZE - 1) / 2;
@@ -41,8 +41,8 @@ void printBoard(Board board) {
 	{
 		for (size_t j = 0; j < BOARD_SIZE; j++)
 		{
-			char* c = board.pieces[j][i] != NULL ? "[O]" : "[ ]";
-			printf(c);
+			Piece * piece = board.pieces[j][i] ;
+			printf("[%x]",piece);
 		}
 		printf("\n");
 	}

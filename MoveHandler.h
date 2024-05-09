@@ -20,9 +20,11 @@ struct MoveHandler {
 
 Piece * getPiece(Board board, Square move);
 
+
 bool equalSquare(Square a, Square b);
 Square minusSquare(Square a, Square b);
 Square plusSquare(Square a, Square b);
+int distanceBetweenSquares(Square a, Square b);
 
 Square getCurrentSquare(sfRenderWindow* window, sfEvent * event);
 void deselect(MoveHandler * moveHandler);

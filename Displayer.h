@@ -9,4 +9,4 @@ struct Displayer{
 } typedef Displayer;
 
 Displayer initialize(Board * board);
-void display(Displayer displayer, sfRenderWindow* window,MoveHandler moveHanlder);
+void display(Displayer displayer, sfRenderWindow* window,MoveHandler moveHandler);

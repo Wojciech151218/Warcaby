@@ -14,9 +14,8 @@ int main()
     GameLogicHandler gameLogicHandler;
     initializeGameLogicHandler(&gameLogicHandler,board);
 
-
     // Create the main window
-    window = sfRenderWindow_create(mode, "CSFML window", sfResize | sfClose, NULL);
+    window = sfRenderWindow_create(mode, "Warcaby", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 

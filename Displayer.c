@@ -1,15 +1,16 @@
 #include "Displayer.h"
 
 Displayer initialize(Board * board) {
+    printf("Displayer initialized\n");
 	Displayer result;
 	result.board = board;
 	return result;
 }
 
-void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHanlder) {
+void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHandler) {
 	sfCircleShape* circles[BOARD_SIZE * BOARD_SIZE];
 	sfRectangleShape* squares[BOARD_SIZE * BOARD_SIZE];
-	Square selectedToMove = moveHanlder.source;
+	Square selectedToMove = moveHandler.source;
 
 
 	int circlesIndex = 0;
@@ -33,7 +34,7 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHanlde
 			sfCircleShape_setRadius(circles[circlesIndex], WINDOW_SIZE / BOARD_SIZE / 2);
 			sfCircleShape_setPosition(circles[circlesIndex], (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
 
-            Piece * currentPiece = displayer.board->pieces[i][j];//TODO
+            Piece * currentPiece = displayer.board->pieces[i][j];
 			if (currentPiece->colour == Black)
 				sfCircleShape_setFillColor(circles[circlesIndex++], currentPiece->isSelected ?
 					hex_to_sfColor("#000000") : hex_to_sfColor(DARK_PIECE_COLOUR) );
@@ -45,7 +46,7 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHanlde
 		}
 	}
 		// Clear the window
-	sfRenderWindow_clear(window, sfGreen);
+	sfRenderWindow_clear(window, hex_to_sfColor(DARK_TILE_COLOUR));
 
 		// Draw the circle
 	for (size_t i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
