@@ -5,8 +5,6 @@ bool equalSquare(Square a, Square b) {
 
 
  Square getCurrentSquare(sfRenderWindow* window, sfEvent * event) {
-     // Check if right click is pressed
-
 
 
      sfVector2i mousePosition = sfMouse_getPositionRenderWindow(window);

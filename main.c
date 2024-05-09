@@ -36,11 +36,9 @@ int main()
 
 
         handleMove(&moveHandler,window);
-
         display(displayer, window, moveHandler);
-        if (isMoveValid(&gameLogicHandler,&moveHandler) && isMoveLegal(&gameLogicHandler, moveHandler)) {
-            executeMove(&gameLogicHandler, moveHandler);
-            deselect(&moveHandler);
+        if ( isMoveLegal(&gameLogicHandler, moveHandler)) {
+            executeMove(&gameLogicHandler, &moveHandler);
         }
 
     }
