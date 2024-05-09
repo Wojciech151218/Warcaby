@@ -4,8 +4,8 @@ void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * boar
 	gameLogicHandler->board = board;
 }
 bool isMoveValid(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler){
-    Move source = moveHandler->source;
-    Move destination = moveHandler->destination;
+    Square source = moveHandler->source;
+    Square destination = moveHandler->destination;
     Piece* sourcePiece = gameLogicHandler->board->pieces[source.x][source.y];
     if(!sourcePiece){
         deselect(moveHandler);
@@ -17,11 +17,11 @@ bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler moveHandler) {
 	
 
 
-	return moveHandler.moveState == Finished ;
+	return moveHandler.isFinished;
 }
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler moveHandler) {
-	Move source = moveHandler.source;
-	Move destination = moveHandler.destination;
+	Square source = moveHandler.source;
+	Square destination = moveHandler.destination;
 
 	Piece* sPiece = gameLogicHandler->board->pieces[source.x][source.y];
 	gameLogicHandler->board->pieces[source.x][source.y] = NULL;

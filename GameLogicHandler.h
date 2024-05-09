@@ -7,5 +7,6 @@ struct GameLogicHandler {
 } typedef GameLogicHandler;
 
 void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board);
+bool isMoveValid(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler);
 bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler moveHandler);
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler moveHandler);

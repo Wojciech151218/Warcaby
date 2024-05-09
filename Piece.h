@@ -2,7 +2,7 @@
 #include "Auxilary.h"
 
 struct Piece{
-	bool isAlive;
+	bool isSelected;
 	bool isPromoted;
 	enum PieceColour colour;
 
