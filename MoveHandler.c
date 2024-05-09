@@ -2,7 +2,12 @@
 bool equalSquare(Square a, Square b) {
     return a.x == b.x && a.y == b.y;
 }
-
+Square minusSquare(Square a, Square b) {
+    return (Square){a.x-b.x,a.x-b.x};
+}
+Square plusSquare(Square a, Square b) {
+    return (Square){a.x+b.x,a.x+b.x};
+}
 
  Square getCurrentSquare(sfRenderWindow* window, sfEvent * event) {
 
@@ -28,6 +33,7 @@ bool equalSquare(Square a, Square b) {
 
  }
  void deselect(MoveHandler * moveHandler) {
+     //moveHandler->pieceSelected->isSelected = false;
      moveHandler->pieceSelected = NULL;
      moveHandler->isFinished = false;
      moveHandler->source = (Square){-1, -1 };
@@ -47,10 +53,10 @@ void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {
 
     Piece * piece = getPiece(*moveHandler->board, square);
 
-
     if(!moveHandler->pieceSelected && piece){
         moveHandler->source = square;
         moveHandler->pieceSelected = piece;
+        //piece->isSelected = true;
         return;
     }
     if(moveHandler->pieceSelected && moveHandler->pieceSelected != piece){

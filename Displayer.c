@@ -33,12 +33,12 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHanlde
 			sfCircleShape_setRadius(circles[circlesIndex], WINDOW_SIZE / BOARD_SIZE / 2);
 			sfCircleShape_setPosition(circles[circlesIndex], (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
 
-
-			if (displayer.board->pieces[i][j]->colour == Black)
-				sfCircleShape_setFillColor(circles[circlesIndex++], equalSquare(selectedToMove,(Square){i, j}) ?
+            Piece * currentPiece = displayer.board->pieces[i][j];//TODO
+			if (currentPiece->colour == Black)
+				sfCircleShape_setFillColor(circles[circlesIndex++], currentPiece->isSelected ?
 					hex_to_sfColor("#000000") : hex_to_sfColor(DARK_PIECE_COLOUR) );
 			else
-				sfCircleShape_setFillColor(circles[circlesIndex++], equalSquare(selectedToMove, (Square) {i, j }) ?
+				sfCircleShape_setFillColor(circles[circlesIndex++], currentPiece->isSelected ?
 					hex_to_sfColor("#000000") : hex_to_sfColor(LIGHT_PIECE_COLOUR) );
 
 
