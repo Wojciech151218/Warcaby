@@ -8,4 +8,5 @@ struct Board {
 
 Board * getStarterBoard();
 Board copyBoard(Board board);
+void deleteBoard(Board * board);
 void printBoard(Board board);

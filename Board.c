@@ -1,7 +1,6 @@
 #include "Board.h"
 
 Board * getStarterBoard() {
-    printf("Board initialized\n");
 	Board * result = (Board*)malloc(sizeof(Board));
 	
 	int whiteLevel = (BOARD_SIZE - 1) / 2;
@@ -43,6 +42,17 @@ Board copyBoard(Board board){
     }
     return result;
 }
+void deleteBoard(Board * board){
+    if(!board) return;
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if(!board->pieces[i][j]) continue;
+            free(board->pieces[i][j]);
+            board->pieces[i][j] = NULL;
+        }
+    }
+}
+
 void printBoard(Board board) {//TODO można to zmodyfikowac w zapisywacz plików
 	system("cls");
 	for (size_t i = 0; i < BOARD_SIZE; i++)

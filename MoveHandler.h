@@ -22,6 +22,7 @@ Piece * getPiece(Board board, Square move);
 
 
 bool equalSquare(Square a, Square b);
+bool isSquareOnTheBoard(Square square);
 Square minusSquare(Square a, Square b);
 Square plusSquare(Square a, Square b);
 Square multiplySquare(Square a,int factor);

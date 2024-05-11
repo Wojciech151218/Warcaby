@@ -12,7 +12,7 @@ int main()
     MoveHandler moveHandler;
     initializeMoveHandler(&moveHandler,&event);
     GameLogicHandler gameLogicHandler;
-    initializeGameLogicHandler(&gameLogicHandler,board);
+    initializeGameLogicHandler(&gameLogicHandler,board,White);
 
     // Create the main window
     window = sfRenderWindow_create(mode, "Warcaby", sfResize | sfClose, NULL);
@@ -36,8 +36,9 @@ int main()
 
         handleMove(&moveHandler,window);
         display(displayer, window, moveHandler);
-        if ( isMoveLegal(&gameLogicHandler, moveHandler)) {
+        if ( isMoveLegal(&gameLogicHandler, &moveHandler)) {
             executeMove(&gameLogicHandler, &moveHandler);
+
         }
 
     }

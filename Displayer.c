@@ -1,7 +1,6 @@
 #include "Displayer.h"
 
 Displayer initialize(Board * board) {
-    printf("Displayer initialized\n");
 	Displayer result;
 	result.board = board;
 	return result;

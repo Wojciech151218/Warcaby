@@ -16,7 +16,10 @@ enum MoveDirection{
 }typedef MoveDirection;
 
 
-void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board);
+void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board, PieceColour turn);
+GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler);
+void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler);
+
 void makeMove(GameLogicHandler * gameLogicHandler,Square source, Square destination);
 MoveDirection getMoveDirection(Square source , Square destination, int moveDistance);
 Square getSquareFromMoveDirection(MoveDirection moveDirection);
@@ -31,7 +34,7 @@ void capture(GameLogicHandler * gameLogicHandler, Square square);
 void getSquaresBetween(GameLogicHandler * gameLogicHandler, Square  squares[],Square  source , Square destination,MoveDirection moveDirection);
 int howManyPieces(GameLogicHandler gameLogicHandler, Square  squares[],int moveDistance);
 
-bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler moveHandler);
+bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler);
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler);
 
 //Algorytm szukania maksymalenej liczby zbic

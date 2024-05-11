@@ -14,6 +14,10 @@ Square plusSquare(Square a, Square b) {
 int distanceBetweenSquares(Square a, Square b){
     return abs(a.x-b.x);
 }
+bool isSquareOnTheBoard(Square square){
+    return !(square.x<0 || square.y< 0 || square.x >= BOARD_SIZE || square.y >= BOARD_SIZE);
+}
+
 
 
 
@@ -49,7 +53,6 @@ int distanceBetweenSquares(Square a, Square b){
 
  }
  void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
-     printf("MoveHandler initialized\n");
      moveHandler->event = event;
      deselect(moveHandler);
  }
@@ -77,6 +80,6 @@ void handleMove(MoveHandler* moveHandler,sfRenderWindow * window) {
 
 }
 Piece * getPiece(Board board, Square square){
-    if(square.x<0 || square.y< 0 || square.x >= BOARD_SIZE || square.y >= BOARD_SIZE) return NULL;
+    if(!isSquareOnTheBoard(square)) return NULL;
     return board.pieces[square.x][square.y];
 }
