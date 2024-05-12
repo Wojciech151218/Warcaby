@@ -16,32 +16,21 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHandle
 	int squaresIndex = 0;
 	for (size_t i = 0; i < BOARD_SIZE; i++) {
 		for (size_t j = 0; j < BOARD_SIZE; j++) {
-
 			squares[squaresIndex] = sfRectangleShape_create();
-			sfVector2f size = { WINDOW_SIZE / BOARD_SIZE, WINDOW_SIZE / BOARD_SIZE };
-			sfRectangleShape_setSize(squares[squaresIndex], size);
-			sfVector2f position = { i * WINDOW_SIZE / BOARD_SIZE, j * WINDOW_SIZE / BOARD_SIZE };
-			sfRectangleShape_setPosition(squares[squaresIndex], position);
-			sfColor color = (i + j) % 2 ? hex_to_sfColor(LIGHT_TILE_COLOUR) : hex_to_sfColor(DARK_TILE_COLOUR);
-			sfRectangleShape_setFillColor(squares[squaresIndex++], color);
+            setSquare(squares[squaresIndex++],(i+j)%2 ,i ,j);
 
 			if (!displayer.board->pieces[i][j]) {
 				circles[circlesIndex++] = NULL;
 				continue;
 			}
 			circles[circlesIndex] = sfCircleShape_create();
-			sfCircleShape_setRadius(circles[circlesIndex], WINDOW_SIZE / BOARD_SIZE / 2);
-			sfCircleShape_setPosition(circles[circlesIndex], (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
-
             Piece * currentPiece = displayer.board->pieces[i][j];
-			if (currentPiece->colour == Black)
-				sfCircleShape_setFillColor(circles[circlesIndex++], currentPiece->isSelected ?
-					hex_to_sfColor("#000000") : hex_to_sfColor(DARK_PIECE_COLOUR) );
-			else
-				sfCircleShape_setFillColor(circles[circlesIndex++], currentPiece->isSelected ?
-					hex_to_sfColor("#000000") : hex_to_sfColor(LIGHT_PIECE_COLOUR) );
-
-
+            if(currentPiece->isSelected)
+                setSelectedPiece(circles[circlesIndex++],currentPiece->colour,i,j);
+            else
+                setPiece(circles[circlesIndex++],currentPiece->colour,i,j);
+            if(currentPiece->isPromoted)
+                setPromotedPiece(circles[circlesIndex-1],currentPiece->colour,i,j);
 		}
 	}
 		// Clear the window
@@ -54,7 +43,6 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHandle
 		
 	}
 
-
 	// Display the window
 	sfRenderWindow_display(window);
 
@@ -63,4 +51,44 @@ void display(Displayer displayer, sfRenderWindow* window, MoveHandler moveHandle
 		if (circles[i]) sfCircleShape_destroy(circles[i]);
 	}
 	
+}
+void setSelectedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
+    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
+    if (pieceColour == Black)
+        sfCircleShape_setFillColor(circleShape,hex_to_sfColor("#000fff") );
+    else
+        sfCircleShape_setFillColor(circleShape,hex_to_sfColor("#fff000") );
+
+}
+void setPromotedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
+    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
+    sfCircleShape_setOutlineThickness(circleShape,2.0f);
+
+    if (pieceColour == Black) {
+        sfCircleShape_setFillColor(circleShape, hex_to_sfColor(DARK_PIECE_COLOUR));
+        sfCircleShape_setOutlineColor(circleShape,hex_to_sfColor(LIGHT_PIECE_COLOUR));
+    }
+    else {
+        sfCircleShape_setFillColor(circleShape, hex_to_sfColor(LIGHT_PIECE_COLOUR));
+        sfCircleShape_setOutlineColor(circleShape,hex_to_sfColor(DARK_PIECE_COLOUR));
+    }
+}
+void setPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
+    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
+    if (pieceColour == Black)
+        sfCircleShape_setFillColor(circleShape,hex_to_sfColor(DARK_PIECE_COLOUR) );
+    else
+        sfCircleShape_setFillColor(circleShape,hex_to_sfColor(LIGHT_PIECE_COLOUR) );
+}
+void setSquare(sfRectangleShape *  rectangleShape,PieceColour pieceColour,int i,int j){
+    sfVector2f size = { WINDOW_SIZE / BOARD_SIZE, WINDOW_SIZE / BOARD_SIZE };
+    sfRectangleShape_setSize(rectangleShape, size);
+    sfVector2f position = { i * WINDOW_SIZE / BOARD_SIZE, j * WINDOW_SIZE / BOARD_SIZE };
+    sfRectangleShape_setPosition(rectangleShape, position);
+    sfColor color = pieceColour ? hex_to_sfColor(LIGHT_TILE_COLOUR) : hex_to_sfColor(DARK_TILE_COLOUR);
+    sfRectangleShape_setFillColor(rectangleShape, color);
+
 }

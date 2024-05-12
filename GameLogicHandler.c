@@ -47,12 +47,14 @@ bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler)
     free(moveTester);
 
     if(postMoveCaptureCount+1 == preMoveCaptureCount){//jesli wybierzemy najsilniejsze bicie
-
-        return captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
+        captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
+        return !postMoveCaptureCount;
     }
     return false; //jesli wybierzemy słabsze bicie;
 }
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler) {
+    if(isSquarePromotable(gameLogicHandler,moveHandler->destination))
+        promote(gameLogicHandler,moveHandler->destination);
     gameLogicHandler->turn = !gameLogicHandler->turn;
     deselect(moveHandler);
 }
@@ -61,6 +63,14 @@ bool isMoveForward(MoveDirection moveDirection,PieceColour pieceColour){
     bool forwardForWhite = (moveDirection == DownRight || moveDirection == DownLeft)&&pieceColour==White;
     return forwardForWhite || forwardForBlack;
 }
+bool isSquarePromotable(GameLogicHandler * gameLogicHandler,Square square){
+    Piece * promotedPiece = getPiece(*gameLogicHandler->board,square);
+    PieceColour pieceColour = promotedPiece->colour;
+    bool forWhite = square.y==BOARD_SIZE-1 && pieceColour == White;
+    bool forBlack = square.y == 0 && pieceColour == Black;
+    return forBlack || forWhite;
+}
+
 int getPieceRange(Piece piece,bool slide){
     return piece.isPromoted ? BOARD_SIZE : slide ? 1:2 ;
 }
@@ -112,10 +122,15 @@ Square getSquareFromMoveDirection(MoveDirection moveDirection){
 };
 
 void makeMove(GameLogicHandler * gameLogicHandler,Square source, Square destination){
-    Piece* sPiece = gameLogicHandler->board->pieces[source.x][source.y];
+    Piece* sourcePiece = getPiece(*gameLogicHandler->board,source);
     gameLogicHandler->board->pieces[source.x][source.y] = NULL;
-    gameLogicHandler->board->pieces[destination.x][destination.y] = sPiece;
+    gameLogicHandler->board->pieces[destination.x][destination.y] = sourcePiece;
 }
+void promote(GameLogicHandler * gameLogicHandler, Square square) {
+    getPiece(*gameLogicHandler->board, square)->isPromoted = true;
+}
+
+
 bool captureMove(GameLogicHandler * gameLogicHandler,  Square source ,Square destination){
     PieceColour turn = gameLogicHandler->turn;
     Piece * sourcePiece = getPiece(*gameLogicHandler->board,source);
@@ -124,7 +139,7 @@ bool captureMove(GameLogicHandler * gameLogicHandler,  Square source ,Square des
 
     int pieceRange = getPieceRange(*sourcePiece,false);
     int moveDistance = distanceBetweenSquares(source,destination);
-    if(pieceRange>moveDistance) return false;
+    if(moveDistance>pieceRange) return false;
 
     MoveDirection moveDirection = getMoveDirection(source,destination,pieceRange);
     if (moveDirection==Failed) return false;
@@ -150,10 +165,10 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
 
     int pieceRange = getPieceRange(*sourcePiece,true);
     int moveDistance = distanceBetweenSquares(source,destination);
-    if(pieceRange>moveDistance)return false;
+    if(moveDistance>pieceRange)return false;
 
-    MoveDirection moveDirection = getMoveDirection(source,destination,pieceRange);//TODO zmienic piecerange na move distance
-    if (moveDirection==Failed || !isMoveForward(moveDirection,sourcePiece->colour)) return false;
+    MoveDirection moveDirection = getMoveDirection(source,destination,moveDistance);
+    if (moveDirection==Failed || (!isMoveForward(moveDirection,sourcePiece->colour) && !sourcePiece->isSelected) ) return false;
 
     Square squaresBetween[moveDistance-1];
     getSquaresBetween(gameLogicHandler,squaresBetween,source,destination,moveDirection);
