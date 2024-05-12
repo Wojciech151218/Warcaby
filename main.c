@@ -32,14 +32,10 @@ int main()
                 sfRenderWindow_close(window);
         }
 
-
-
-        handleMove(&moveHandler,window);
+        handleMove(&moveHandler, window, *board, gameLogicHandler.turn);
         display(displayer, window, moveHandler);
-        if ( isMoveLegal(&gameLogicHandler, &moveHandler)) {
+        if (test(&gameLogicHandler,&moveHandler))
             executeMove(&gameLogicHandler, &moveHandler);
-
-        }
 
     }
 

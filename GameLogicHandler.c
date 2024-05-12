@@ -15,6 +15,15 @@ void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler){
     free(gameLogicHandler);
     gameLogicHandler = NULL;
 }
+bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler){
+    if(!moveHandler->isFinished) return false;
+    if(slideMove(gameLogicHandler,moveHandler->source,moveHandler->destination)
+    || captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination))
+        return true;
+
+    deselect(moveHandler);
+    return false;
+}
 
 bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler) {
     if (!moveHandler->isFinished) return false;

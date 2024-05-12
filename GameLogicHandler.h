@@ -19,6 +19,7 @@ enum MoveDirection{
 void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board, PieceColour turn);
 GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler);
 void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler);
+bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler);
 
 void makeMove(GameLogicHandler * gameLogicHandler,Square source, Square destination);
 MoveDirection getMoveDirection(Square source , Square destination, int moveDistance);

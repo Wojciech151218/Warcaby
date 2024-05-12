@@ -14,7 +14,6 @@ struct MoveHandler {
 	Square destination;
     Piece * pieceSelected;
     bool isFinished;
-    Board * board;
 	sfEvent* event;
 }typedef MoveHandler;
 
@@ -30,5 +29,5 @@ int distanceBetweenSquares(Square a, Square b);
 
 Square getCurrentSquare(sfRenderWindow* window, sfEvent * event);
 void deselect(MoveHandler * moveHandler);
-void handleMove(MoveHandler* moveHandler, sfRenderWindow* window);
+void handleMove(MoveHandler *moveHandler, sfRenderWindow *window, Board board, PieceColour turn);
 void initializeMoveHandler(MoveHandler* moveHandler, sfEvent* event);
