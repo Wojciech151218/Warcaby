@@ -66,7 +66,7 @@ void handleMove(MoveHandler *moveHandler, sfRenderWindow *window, Board board, P
 
     Piece * piece = getPiece(board, square);
     if(moveHandler->pieceSelected == piece) return;
-    if(piece && piece->colour!=turn);
+    if(piece && piece->colour!=turn) return;
 
 
     if(!moveHandler->pieceSelected){
