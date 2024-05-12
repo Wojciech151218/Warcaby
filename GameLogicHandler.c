@@ -11,9 +11,9 @@ GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler){
     return result;
 }
 void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler){
-    deleteBoard(gameLogicHandler->board);
-    free(gameLogicHandler);
-    gameLogicHandler = NULL;
+    //deleteBoard(gameLogicHandler->board);
+    //free(gameLogicHandler);
+    //gameLogicHandler = NULL;
 }
 bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler){
     if(!moveHandler->isFinished) return false;
@@ -26,30 +26,31 @@ bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler){
 }
 
 bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler) {
-    if (!moveHandler->isFinished) return false;
+    if(!moveHandler->isFinished) return false;
 
-    int preMoveCaptureCount = getMaxCapture(gameLogicHandler);
-
-    if(!preMoveCaptureCount)
-        return slideMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
-    else {
-        GameLogicHandler * moveTester = malloc(sizeof (GameLogicHandler));
-        Board copiedBoard = copyBoard(*gameLogicHandler->board);
-        initializeGameLogicHandler(moveTester,&copiedBoard,gameLogicHandler->turn);
-        captureMove(moveTester, moveHandler->source, moveHandler->destination);
-
-
-        int postMoveCaptureCount = getMaxCapture(moveTester);
-        //deleteGameLogicHandler(moveTester);
-        if (preMoveCaptureCount != postMoveCaptureCount + 1) {
-            printf("not the longest capture\n");
-            deselect(moveHandler);
-            return false;
-        }
+    int preMoveCaptureCount = getMaxCapture(*gameLogicHandler);
+    if(!preMoveCaptureCount){// jesli nie ma bic
+        if(slideMove(gameLogicHandler,moveHandler->source,moveHandler->destination)) return true;
+        deselect(moveHandler);
+        return false;
     }
+    GameLogicHandler * moveTester = malloc( sizeof(GameLogicHandler)) ;// jakims chujem Move tester zapisany na stosie się dziwnie zachowuje a ten na kopcu działa dobrze
+    Board copiedBoard = copyBoard(*gameLogicHandler->board);
+    initializeGameLogicHandler(moveTester,&copiedBoard,gameLogicHandler->turn);
 
-    return captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
+    if(!captureMove(moveTester,moveHandler->source,moveHandler->destination)){//jesli sa bicia ale ruch jest nieprawidłwoy np nie jest biciem
+        free(moveTester);
+        deselect(moveHandler);
+        return false;
+    }
+    int postMoveCaptureCount = getMaxCapture(*moveTester);
+    free(moveTester);
 
+    if(postMoveCaptureCount+1 == preMoveCaptureCount){//jesli wybierzemy najsilniejsze bicie
+
+        return captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
+    }
+    return false; //jesli wybierzemy słabsze bicie;
 }
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler) {
     gameLogicHandler->turn = !gameLogicHandler->turn;
@@ -165,14 +166,14 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
 
 }
 
-int getMaxCapture(GameLogicHandler * gameLogicHandler){
+int getMaxCapture(GameLogicHandler gameLogicHandler){
     int result =0;
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             Square currentSquare = (Square){i,j};
-            Piece * currentPiece = getPiece(*gameLogicHandler->board,currentSquare);
-            if(!currentPiece || currentPiece->colour!= gameLogicHandler->turn) continue;
-            getMaxCaptureUtil(*gameLogicHandler,*gameLogicHandler->board,&result,0,currentSquare);
+            Piece * currentPiece = getPiece(*gameLogicHandler.board,currentSquare);
+            if(!currentPiece || currentPiece->colour!= gameLogicHandler.turn) continue;
+            getMaxCaptureUtil(gameLogicHandler,*gameLogicHandler.board,&result,0,currentSquare);
 
         }
     }

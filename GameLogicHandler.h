@@ -40,5 +40,5 @@ void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler);
 
 //Algorytm szukania maksymalenej liczby zbic
 void setPossibleSquares(GameLogicHandler,Square squares[],Square currentSquare);
-int getMaxCapture(GameLogicHandler * gameLogicHandler);
+int getMaxCapture(GameLogicHandler  gameLogicHandler);
 void getMaxCaptureUtil(GameLogicHandler  gameLogicHandler,Board board,int * result,int depth,Square square);

@@ -34,7 +34,7 @@ int main()
 
         handleMove(&moveHandler, window, *board, gameLogicHandler.turn);
         display(displayer, window, moveHandler);
-        if (test(&gameLogicHandler,&moveHandler))
+        if (isMoveLegal(&gameLogicHandler,&moveHandler))
             executeMove(&gameLogicHandler, &moveHandler);
 
     }
