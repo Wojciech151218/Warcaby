@@ -10,7 +10,7 @@ struct Displayer{
 
 Displayer initialize(Board * board);
 void display(Displayer displayer, sfRenderWindow* window,MoveHandler moveHandler);
-void setSelectedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j);
-void setPromotedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j);
-void setPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j);
+void setSelectedPiece(sfCircleShape *  circleShape,Piece * piece ,int i,int j);
+void setPromotedPiece(sfCircleShape *  circleShape,Piece * piece);
+void setPiece(sfCircleShape *  circleShape,Piece * piece,int i,int j);
 void setSquare(sfRectangleShape *  rectangleShape,PieceColour pieceColour,int i,int j);

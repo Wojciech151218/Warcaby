@@ -141,7 +141,7 @@ bool captureMove(GameLogicHandler * gameLogicHandler,  Square source ,Square des
     int moveDistance = distanceBetweenSquares(source,destination);
     if(moveDistance>pieceRange) return false;
 
-    MoveDirection moveDirection = getMoveDirection(source,destination,pieceRange);
+    MoveDirection moveDirection = getMoveDirection(source,destination,moveDistance);
     if (moveDirection==Failed) return false;
 
     Square squaresBetween[moveDistance-1];
@@ -202,7 +202,7 @@ void getMaxCaptureUtil(GameLogicHandler  gameLogicHandler,Board board,int * resu
     Square everyDirection[4]={getSquareFromMoveDirection(TopLeft), getSquareFromMoveDirection(TopRight),
                               getSquareFromMoveDirection(DownLeft), getSquareFromMoveDirection(DownRight)};
     Piece * currentPiece = getPiece(board,square);
-    if(!currentPiece) return;
+    //if(!currentPiece) return;
 
     for (int i = 2; i <= getPieceRange(*currentPiece,false); ++i) {
         for (int j = 0; j < 4; ++j) {
