@@ -6,16 +6,20 @@ int main()
 {
     sfVideoMode mode = { WINDOW_SIZE, WINDOW_SIZE, 64 };
     sfRenderWindow* window;
+    window = sfRenderWindow_create(mode, "Warcaby", sfResize | sfClose, NULL);
     sfEvent event;
+
     Board * board = getStarterBoard();
-    Displayer displayer = initialize(board);
+
+    Displayer displayer = getDisplayer(board, window);
+
     MoveHandler moveHandler;
     initializeMoveHandler(&moveHandler,&event);
+
     GameLogicHandler gameLogicHandler;
     initializeGameLogicHandler(&gameLogicHandler,board,White);
 
     // Create the main window
-    window = sfRenderWindow_create(mode, "Warcaby", sfResize | sfClose, NULL);
     if (!window)
         return 1;
 
@@ -33,7 +37,7 @@ int main()
         }
 
         handleMove(&moveHandler, window, *board, gameLogicHandler.turn);
-        display(displayer, window, moveHandler);
+        display(&displayer);
         if (isMoveLegal(&gameLogicHandler,&moveHandler))
             executeMove(&gameLogicHandler, &moveHandler);
 

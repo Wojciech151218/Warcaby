@@ -5,12 +5,15 @@
 
 struct Displayer{
 	Board * board;
+    sfRenderWindow * window;
 
 } typedef Displayer;
 
-Displayer initialize(Board * board);
-void display(Displayer displayer, sfRenderWindow* window,MoveHandler moveHandler);
+Displayer getDisplayer(Board *board, sfRenderWindow *window);
+void display(Displayer *displayer);
+/*
 void setSelectedPiece(sfCircleShape *  circleShape,Piece * piece ,int i,int j);
 void setPromotedPiece(sfCircleShape *  circleShape,Piece * piece);
 void setPiece(sfCircleShape *  circleShape,Piece * piece,int i,int j);
 void setSquare(sfRectangleShape *  rectangleShape,PieceColour pieceColour,int i,int j);
+ */
