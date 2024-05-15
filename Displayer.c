@@ -53,8 +53,8 @@ void display(Displayer * displayer) {
 
 }
 void setSelectedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
-    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
-    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
+    sfCircleShape_setRadius(circleShape, (float)WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* (float)WINDOW_SIZE / BOARD_SIZE, j*(float) WINDOW_SIZE / BOARD_SIZE });
     if (pieceColour == Black)
         sfCircleShape_setFillColor(circleShape,hex_to_sfColor("#000fff") );
     else
@@ -62,31 +62,29 @@ void setSelectedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i
 
 }
 void setPromotedPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
-    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
-    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
-    sfCircleShape_setOutlineThickness(circleShape,2.0f);
+    sfCircleShape_setRadius(circleShape, (float)WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i*(float) WINDOW_SIZE / BOARD_SIZE, j* (float)WINDOW_SIZE / BOARD_SIZE });
+    sfCircleShape_setOutlineThickness(circleShape,4.0f);
 
     if (pieceColour == Black) {
-        sfCircleShape_setFillColor(circleShape, hex_to_sfColor(DARK_PIECE_COLOUR));
         sfCircleShape_setOutlineColor(circleShape,hex_to_sfColor(LIGHT_PIECE_COLOUR));
     }
     else {
-        sfCircleShape_setFillColor(circleShape, hex_to_sfColor(LIGHT_PIECE_COLOUR));
         sfCircleShape_setOutlineColor(circleShape,hex_to_sfColor(DARK_PIECE_COLOUR));
     }
 }
 void setPiece(sfCircleShape *  circleShape,PieceColour pieceColour,int i,int j){
-    sfCircleShape_setRadius(circleShape, WINDOW_SIZE / BOARD_SIZE / 2);
-    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* WINDOW_SIZE / BOARD_SIZE, j* WINDOW_SIZE / BOARD_SIZE });
+    sfCircleShape_setRadius(circleShape, (float)WINDOW_SIZE / BOARD_SIZE / 2);
+    sfCircleShape_setPosition(circleShape, (sfVector2f) { i* (float)WINDOW_SIZE / BOARD_SIZE, j*(float) WINDOW_SIZE / BOARD_SIZE });
     if (pieceColour == Black)
         sfCircleShape_setFillColor(circleShape,hex_to_sfColor(DARK_PIECE_COLOUR) );
     else
         sfCircleShape_setFillColor(circleShape,hex_to_sfColor(LIGHT_PIECE_COLOUR) );
 }
 void setSquare(sfRectangleShape *  rectangleShape,PieceColour pieceColour,int i,int j){
-    sfVector2f size = { WINDOW_SIZE / BOARD_SIZE, WINDOW_SIZE / BOARD_SIZE };
+    sfVector2f size = { (float)WINDOW_SIZE / BOARD_SIZE, (float)WINDOW_SIZE / BOARD_SIZE };
     sfRectangleShape_setSize(rectangleShape, size);
-    sfVector2f position = { i * WINDOW_SIZE / BOARD_SIZE, j * WINDOW_SIZE / BOARD_SIZE };
+    sfVector2f position = { i * (float)WINDOW_SIZE / BOARD_SIZE, j * (float)WINDOW_SIZE / BOARD_SIZE };
     sfRectangleShape_setPosition(rectangleShape, position);
     sfColor color = pieceColour ? hex_to_sfColor(LIGHT_TILE_COLOUR) : hex_to_sfColor(DARK_TILE_COLOUR);
     sfRectangleShape_setFillColor(rectangleShape, color);

@@ -15,7 +15,6 @@ Board * getStarterBoard() {
 			if (whiteLevel) {
 				result->pieces[j][i] = (Piece*)malloc(sizeof(Piece));
                 initializePiece(result->pieces[j][i], White, false);
-				
 				continue;
 			}
 			if (neutralLevel) {
@@ -51,6 +50,7 @@ void deleteBoard(Board * board){
             board->pieces[i][j] = NULL;
         }
     }
+    free(board);
 }
 
 void printBoardToFile(Board board, FILE *file) {

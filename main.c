@@ -8,11 +8,15 @@ void initializeGame(sfRenderWindow* window,sfEvent * event, Displayer * displaye
     initializeMoveHandler(moveHandler,event);
     initializeGameLogicHandler(gameLogicHandler,board,White);
 }
-void resetGame(GameFileHandler * gameFileHandler,Board * board,GameLogicHandler * gameLogicHandler){
-    resetBoardFile(&gameFileHandler);
-    free(board);
-    board = getStarterBoard();
+void resetGame(GameFileHandler * gameFileHandler,Board ** board,GameLogicHandler * gameLogicHandler,Displayer * displayer){
+    resetBoardFile(gameFileHandler);
+    deleteBoard(*board);
+    *board = getStarterBoard();
+    gameLogicHandler->board = *board;
     gameLogicHandler->turn = White;
+    gameFileHandler->board = *board;
+    displayer->board = *board;
+    saveGame(gameFileHandler,White);
 }
 
 int main()
@@ -50,9 +54,9 @@ int main()
             if (event.type == sfEvtClosed)
                 sfRenderWindow_close(window);
         }
-        if (sfKeyboard_isKeyPressed(sfKeyN)) {
-            resetGame(&gameFileHandler,board,&gameLogicHandler);
-        }
+        if (sfKeyboard_isKeyPressed(sfKeyN))
+            resetGame(&gameFileHandler,&board,&gameLogicHandler,&displayer);
+
 
         handleMove(&moveHandler, window, *board, gameLogicHandler.turn);
         display(&displayer);
@@ -61,7 +65,7 @@ int main()
             saveGame(&gameFileHandler, gameLogicHandler.turn);
         }
         if(getGameState(*board)!=InGame)
-            resetGame(&gameFileHandler,board,&gameLogicHandler);
+            resetGame(&gameFileHandler,&board,&gameLogicHandler,&displayer);
 
     }
     sfRenderWindow_destroy(window);

@@ -168,7 +168,7 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
     if(moveDistance>pieceRange)return false;
 
     MoveDirection moveDirection = getMoveDirection(source,destination,moveDistance);
-    if (moveDirection==Failed || (!isMoveForward(moveDirection,sourcePiece->colour) && !sourcePiece->isSelected) ) return false;
+    if (moveDirection==Failed || !isMoveForward(moveDirection,sourcePiece->colour)) return false;
 
     Square squaresBetween[moveDistance-1];
     getSquaresBetween(gameLogicHandler,squaresBetween,source,destination,moveDirection);
