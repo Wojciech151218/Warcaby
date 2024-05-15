@@ -12,8 +12,10 @@ void display(Displayer *displayer) {
     sfSprite* sprites[BOARD_SIZE * BOARD_SIZE];
     sfRectangleShape* squares[BOARD_SIZE * BOARD_SIZE];
 
-    sfTexture* whiteTexture = sfTexture_createFromFile("sprites/Draughts_mlt45.svg.png", NULL);
-    sfTexture* blackTexture = sfTexture_createFromFile("sprites/Draughts_mlt45.svg.png", NULL);
+    sfTexture* whiteTexture = sfTexture_createFromFile("sprites/white.png", NULL);
+    sfTexture* blackTexture = sfTexture_createFromFile("sprites/black.png", NULL);
+    sfTexture* promotedWhiteTexture = sfTexture_createFromFile("sprites/promoted/damka_biala.png", NULL);
+    sfTexture* promotedBlackTexture = sfTexture_createFromFile("sprites/promoted/damka_czarna.png", NULL);
 
     int spriteIndex = 0;
     int squaresIndex = 0;
@@ -35,18 +37,26 @@ void display(Displayer *displayer) {
                 continue;
             }
             sprites[spriteIndex] = sfSprite_create();
-            sfSprite_setScale(sprites[spriteIndex], (sfVector2f){1,1});
+            sfSprite_setScale(sprites[spriteIndex], (sfVector2f){0.025,0.025});
             sfVector2f squarePosition = { i * WINDOW_SIZE / BOARD_SIZE, j * WINDOW_SIZE / BOARD_SIZE };
             sfVector2f spritePosition = {
-                    squarePosition.x + (WINDOW_SIZE / BOARD_SIZE - 0.75 * WINDOW_SIZE / BOARD_SIZE) / 2,
+                    squarePosition.x + (WINDOW_SIZE / BOARD_SIZE - 0.7 * WINDOW_SIZE / BOARD_SIZE) / 2,
                     squarePosition.y + (WINDOW_SIZE / BOARD_SIZE - 0.75 * WINDOW_SIZE / BOARD_SIZE) / 2
             };
             sfSprite_setPosition(sprites[spriteIndex], spritePosition);
 
-            if (currentPiece->colour == Black) {
-                sfSprite_setTexture(sprites[spriteIndex], blackTexture, sfTrue);
-            }else {
-                sfSprite_setTexture(sprites[spriteIndex], whiteTexture, sfTrue);
+            if (currentPiece->isPromoted) {
+                if (currentPiece->colour == Black) {
+                    sfSprite_setTexture(sprites[spriteIndex], promotedBlackTexture, sfTrue);
+                } else {
+                    sfSprite_setTexture(sprites[spriteIndex], promotedWhiteTexture, sfTrue);
+                }
+            }else{
+                if (currentPiece->colour == Black){
+                    sfSprite_setTexture(sprites[spriteIndex], blackTexture, sfTrue);
+                } else {
+                    sfSprite_setTexture(sprites[spriteIndex], whiteTexture, sfTrue);
+                }
             }
             spriteIndex++;
         }
