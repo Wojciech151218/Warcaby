@@ -1,8 +1,8 @@
 //
 // Created by Wojciech on 14.05.2024.
 //
-#include "GameStateHandler.h"
-void initializeGameStateHandler(GameStateHandler * gameStateHandler,Board * board,PieceColour turn){
+#include "GameFileHandler.h"
+void initializeGameFileHandler(GameFileHandler * gameFileHandler, Board * board, PieceColour turn){
     char * directoryName = "GameDirectory";
     if (access(directoryName, F_OK)) {
         if (mkdir(directoryName) == -1) {
@@ -14,16 +14,16 @@ void initializeGameStateHandler(GameStateHandler * gameStateHandler,Board * boar
             exit(EXIT_FAILURE);
         }
     }
-    gameStateHandler->currentGameFile = "currentGame.txt";
-    gameStateHandler->gameDirectory = directoryName;
-    gameStateHandler->board =board;
+    gameFileHandler->currentGameFile = "currentGame.txt";
+    gameFileHandler->gameDirectory = directoryName;
+    gameFileHandler->board =board;
 
 
 }
-GameState getGameState(GameStateHandler* gameStateHandler){}
-bool isGameDirectoryEmpty(GameStateHandler *gameStateHandler) {
+
+bool isGameDirectoryEmpty(GameFileHandler *gameFileHandler) {
     // Open the directory
-    DIR *dir = opendir(gameStateHandler->gameDirectory);
+    DIR *dir = opendir(gameFileHandler->gameDirectory);
     if (dir == NULL) {
         perror("Unable to open directory");
         return false; // Error occurred
@@ -43,10 +43,10 @@ bool isGameDirectoryEmpty(GameStateHandler *gameStateHandler) {
 
     return true; // Directory is empty
 }
-void saveGame(GameStateHandler *gameStateHandler, PieceColour turn) {
+void saveGame(GameFileHandler *gameFileHandler, PieceColour turn) {
     // Create the file path
     char filePath[100]; // Adjust the size as needed
-    sprintf(filePath, "%s/%s", gameStateHandler->gameDirectory,gameStateHandler->currentGameFile);
+    sprintf(filePath, "%s/%s", gameFileHandler->gameDirectory,gameFileHandler->currentGameFile);
 
     // Open the file for writing
     FILE *file = fopen(filePath, "w");
@@ -56,13 +56,13 @@ void saveGame(GameStateHandler *gameStateHandler, PieceColour turn) {
     }
 
     fprintf(file,  turn==White ? "W\n":"B\n");
-    printBoardToFile(*gameStateHandler->board, file);
+    printBoardToFile(*gameFileHandler->board, file);
     fclose(file);
 }
-void resetBoardFile(GameStateHandler* gameStateHandler) {
+void resetBoardFile(GameFileHandler* gameFileHandler) {
     // Create the file path
     char filePath[100]; // Adjust the size as needed
-    sprintf(filePath, "%s/%s", gameStateHandler->gameDirectory,gameStateHandler->currentGameFile);
+    sprintf(filePath, "%s/%s", gameFileHandler->gameDirectory,gameFileHandler->currentGameFile);
 
     // Delete the file
     if (remove(filePath) != 0) {
@@ -101,14 +101,14 @@ Board constructBoardFromFile(FILE *file) {
     }
     return board;
 }
-void readBoardFromFile(GameStateHandler *gameStateHandler, Board *board) {
-    FILE * file = fopen(sum_strings(sum_strings(gameStateHandler->gameDirectory,"/"),gameStateHandler->currentGameFile),"r");
+void readBoardFromFile(GameFileHandler *gameFileHandler, Board *board) {
+    FILE * file = fopen(sum_strings(sum_strings(gameFileHandler->gameDirectory,"/"),gameFileHandler->currentGameFile),"r");
     *board = constructBoardFromFile(file);
     fclose(file);
 }
-PieceColour  readTurnFromTheFile(GameStateHandler gameStateHandler){
+PieceColour  readTurnFromTheFile(GameFileHandler gameFileHandler){
     char turnSignature;
-    FILE * file = fopen(sum_strings(sum_strings(gameStateHandler.gameDirectory,"/"),gameStateHandler.currentGameFile),"r");
+    FILE * file = fopen(sum_strings(sum_strings(gameFileHandler.gameDirectory,"/"),gameFileHandler.currentGameFile),"r");
     turnSignature = fgetc(file);
     fclose(file);
     return turnSignature == 'W'? White : Black;

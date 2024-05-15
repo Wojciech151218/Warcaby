@@ -72,3 +72,17 @@ void printBoardToFile(Board board, FILE *file) {
         fprintf(file,"\n");
 	}
 }
+GameState getGameState(Board board){
+    int blackCount =0;
+    int whiteCount =0;
+    for (int i = 0; i < BOARD_SIZE ; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if(!board.pieces[i][j]) continue;
+            if(board.pieces[i][j]->colour == White)
+                whiteCount++;
+            else
+                blackCount++;
+        }
+    }
+    return !blackCount ? WhiteWon :( !whiteCount? BlackWon : InGame);
+}

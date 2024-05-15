@@ -59,7 +59,7 @@ bool isSquareOnTheBoard(Square square){
  }
 
 void handleMove(MoveHandler *moveHandler, sfRenderWindow *window, Board board, PieceColour turn) {
-    if(moveHandler->event->type != sfEvtMouseButtonReleased ) return;
+    if(moveHandler->event->type != sfEvtMouseButtonPressed ) return;
 
     Square square = getCurrentSquare(window, moveHandler->event);
     if(square.x ==-1) return;

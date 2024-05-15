@@ -11,3 +11,4 @@ Board * getStarterBoard();
 Board copyBoard(Board board);
 void deleteBoard(Board * board);
 void printBoardToFile(Board board, FILE *file);
+GameState getGameState(Board board);

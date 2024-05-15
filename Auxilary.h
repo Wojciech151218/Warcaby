@@ -18,6 +18,9 @@
 
 
 enum PieceColour { Black, White }typedef PieceColour;
+enum GameState{
+    BlackWon,WhiteWon,Draw,InGame
+} typedef GameState;
 
 sfColor hex_to_sfColor(const char* hex);
 char* sum_strings(char* str1, char* str2);
