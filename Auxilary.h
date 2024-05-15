@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #define bool int
 #define true 1
 #define false 0
@@ -15,6 +16,8 @@
 
 
 
+
 enum PieceColour { Black, White }typedef PieceColour;
 
 sfColor hex_to_sfColor(const char* hex);
+char* sum_strings(char* str1, char* str2);

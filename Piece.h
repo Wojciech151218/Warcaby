@@ -8,4 +8,4 @@ struct Piece{
 
 
 } typedef Piece;
-void initializePiece(Piece* piece,PieceColour colour);
+void initializePiece(Piece *piece, PieceColour colour, bool isPromoted);

@@ -18,3 +18,9 @@ sfColor hex_to_sfColor(const char* hex) {
     color.a = 255; // Set alpha to full opacity
     return color;
 }
+char* sum_strings(char* str1, char* str2) {
+    char* result = malloc(strlen(str1) + strlen(str2) + 1);  // +1 for the null-terminator
+    strcpy(result, str1);
+    strcat(result, str2);
+    return result;
+}

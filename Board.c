@@ -14,7 +14,7 @@ Board * getStarterBoard() {
 			}
 			if (whiteLevel) {
 				result->pieces[j][i] = (Piece*)malloc(sizeof(Piece));
-				initializePiece(result->pieces[j][i], White);
+                initializePiece(result->pieces[j][i], White, false);
 				
 				continue;
 			}
@@ -24,7 +24,7 @@ Board * getStarterBoard() {
 			}
 			if (blackLevel) {
 				result->pieces[j][i] = (Piece*)malloc(sizeof(Piece));
-				initializePiece(result->pieces[j][i], Black);
+                initializePiece(result->pieces[j][i], Black, false);
 			}
 		}
 		if (whiteLevel) { whiteLevel--;continue; }
@@ -53,15 +53,22 @@ void deleteBoard(Board * board){
     }
 }
 
-void printBoard(Board board) {//TODO można to zmodyfikowac w zapisywacz plików
-	system("cls");
-	for (size_t i = 0; i < BOARD_SIZE; i++)
-	{
-		for (size_t j = 0; j < BOARD_SIZE; j++)
-		{
+void printBoardToFile(Board board, FILE *file) {
+	for (size_t i = 0; i < BOARD_SIZE; i++){
+		for (size_t j = 0; j < BOARD_SIZE; j++){
 			Piece * piece = board.pieces[j][i] ;
-			printf("[%x]",piece);
+            char * pieceSignature;
+            if(!piece){
+                fprintf(file," ");
+                continue;
+            }
+            if (piece->isPromoted) {
+                pieceSignature = (piece->colour == White) ? "Q" : "q";
+            } else {
+                pieceSignature = (piece->colour == White) ? "O" : "o";
+            }
+            fprintf(file, pieceSignature);
 		}
-		printf("\n");
+        fprintf(file,"\n");
 	}
 }

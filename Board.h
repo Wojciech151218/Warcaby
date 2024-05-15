@@ -1,6 +1,7 @@
 #pragma once
 #include "Piece.h"
 #include <stdio.h>
+#include "stdlib.h"
 
 struct Board {
 	Piece * pieces[BOARD_SIZE][BOARD_SIZE];
@@ -9,4 +10,4 @@ struct Board {
 Board * getStarterBoard();
 Board copyBoard(Board board);
 void deleteBoard(Board * board);
-void printBoard(Board board);
+void printBoardToFile(Board board, FILE *file);

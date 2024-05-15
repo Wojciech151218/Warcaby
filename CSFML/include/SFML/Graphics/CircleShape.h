@@ -161,7 +161,7 @@ CSFML_GRAPHICS_API sfVector2f sfCircleShape_getScale(const sfCircleShape* shape)
 CSFML_GRAPHICS_API sfVector2f sfCircleShape_getOrigin(const sfCircleShape* shape);
 
 ////////////////////////////////////////////////////////////
-/// \brief Move a circle shape by a given offset
+/// \brief Square a circle shape by a given offset
 ///
 /// This function adds to the current position of the object,
 /// unlike sfCircleShape_setPosition which overwrites it.
