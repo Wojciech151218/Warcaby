@@ -28,13 +28,13 @@ bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler){
 bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler) {
     if(!moveHandler->isFinished) return false;
 
-    int preMoveCaptureCount = getMaxCapture(*gameLogicHandler);
+    int preMoveCaptureCount = getMaxCapture(*gameLogicHandler, NULL);
     if(!preMoveCaptureCount){// jesli nie ma bic
         if(slideMove(gameLogicHandler,moveHandler->source,moveHandler->destination)) return true;
         deselect(moveHandler);
         return false;
     }
-    GameLogicHandler * moveTester = malloc( sizeof(GameLogicHandler)) ;// jakims chujem Move tester zapisany na stosie się dziwnie zachowuje a ten na kopcu działa dobrze
+    GameLogicHandler * moveTester = malloc( sizeof(GameLogicHandler)) ;
     Board copiedBoard = copyBoard(*gameLogicHandler->board);
     initializeGameLogicHandler(moveTester,&copiedBoard,gameLogicHandler->turn);
 
@@ -43,7 +43,7 @@ bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler)
         deselect(moveHandler);
         return false;
     }
-    int postMoveCaptureCount = getMaxCapture(*moveTester);
+    int postMoveCaptureCount = getMaxCapture(*moveTester, getPiece(*gameLogicHandler->board,moveHandler->source));
     free(moveTester);
 
     if(postMoveCaptureCount+1 == preMoveCaptureCount){//jesli wybierzemy najsilniejsze bicie
@@ -58,9 +58,10 @@ void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler) 
     gameLogicHandler->turn = !gameLogicHandler->turn;
     deselect(moveHandler);
 }
-bool isMoveForward(MoveDirection moveDirection,PieceColour pieceColour){
-    bool forwardForBlack = (moveDirection == TopRight || moveDirection == TopLeft) &&pieceColour==Black;
-    bool forwardForWhite = (moveDirection == DownRight || moveDirection == DownLeft)&&pieceColour==White;
+bool isMoveForward(MoveDirection moveDirection, Piece * piece){
+    if(piece->isPromoted) return  true;
+    bool forwardForBlack = (moveDirection == TopRight || moveDirection == TopLeft) && piece->colour == Black;
+    bool forwardForWhite = (moveDirection == DownRight || moveDirection == DownLeft) && piece->colour == White;
     return forwardForWhite || forwardForBlack;
 }
 bool isSquarePromotable(GameLogicHandler * gameLogicHandler,Square square){
@@ -168,7 +169,7 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
     if(moveDistance>pieceRange)return false;
 
     MoveDirection moveDirection = getMoveDirection(source,destination,moveDistance);
-    if (moveDirection==Failed || !isMoveForward(moveDirection,sourcePiece->colour)) return false;
+    if (moveDirection==Failed || !isMoveForward(moveDirection,sourcePiece)) return false;
 
     Square squaresBetween[moveDistance-1];
     getSquaresBetween(gameLogicHandler,squaresBetween,source,destination,moveDirection);
@@ -181,12 +182,17 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
 
 }
 
-int getMaxCapture(GameLogicHandler gameLogicHandler){
+int getMaxCapture(GameLogicHandler gameLogicHandler, Piece *piece) {
     int result =0;
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             Square currentSquare = (Square){i,j};
             Piece * currentPiece = getPiece(*gameLogicHandler.board,currentSquare);
+            if(piece){
+                if(currentPiece == piece)
+                    getMaxCaptureUtil(gameLogicHandler,*gameLogicHandler.board,&result,0,currentSquare);
+                continue;
+            }
             if(!currentPiece || currentPiece->colour!= gameLogicHandler.turn) continue;
             getMaxCaptureUtil(gameLogicHandler,*gameLogicHandler.board,&result,0,currentSquare);
 

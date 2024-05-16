@@ -70,8 +70,8 @@ void setSelectedPiece(sfSprite *sprite, PieceColour colour) {
 void setSpriteTexture(sfSprite *sprite, sfTexture *texture, int i, int j) {
     sfSprite_setScale(sprite, (sfVector2f){0.025f,0.025f});
     sfSprite_setPosition(sprite, (sfVector2f) {
-        (i * WINDOW_SIZE / BOARD_SIZE) + ((float) WINDOW_SIZE / BOARD_SIZE - 0.7 * WINDOW_SIZE / BOARD_SIZE) / 2,
-        (j * WINDOW_SIZE / BOARD_SIZE) +  ((float) WINDOW_SIZE / BOARD_SIZE - 0.75 * WINDOW_SIZE / BOARD_SIZE) / 2
+        (i *(float) WINDOW_SIZE / BOARD_SIZE) + ((float) WINDOW_SIZE / BOARD_SIZE - 0.7f * WINDOW_SIZE / BOARD_SIZE) / 2,
+        (j * (float)WINDOW_SIZE / BOARD_SIZE) +  ((float) WINDOW_SIZE / BOARD_SIZE - 0.75f * WINDOW_SIZE / BOARD_SIZE) / 2
     });
     sfSprite_setTexture(sprite, texture,sfTrue);
 

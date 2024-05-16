@@ -9,8 +9,8 @@
 #define false 0
 #define BOARD_SIZE 10
 #define WINDOW_SIZE 1000
-#define DARK_TILE_COLOUR "#252525"
-#define LIGHT_TILE_COLOUR "#d18978"
+#define DARK_TILE_COLOUR "#613512"
+#define LIGHT_TILE_COLOUR "#d69563"
 #define DARK_PIECE_COLOUR "#691717"
 #define LIGHT_PIECE_COLOUR "#fefdf8"
 
