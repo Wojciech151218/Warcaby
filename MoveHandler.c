@@ -45,6 +45,8 @@ bool isSquareOnTheBoard(Square square){
 
  }
  void deselect(MoveHandler * moveHandler) {
+     if(moveHandler->pieceSelected)
+         moveHandler->pieceSelected->isSelected = false;
      moveHandler->pieceSelected = NULL;
      moveHandler->isFinished = false;
      moveHandler->source = (Square){-1, -1 };
@@ -53,7 +55,10 @@ bool isSquareOnTheBoard(Square square){
  }
  void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
      moveHandler->event = event;
-     deselect(moveHandler);
+     moveHandler->pieceSelected = NULL;
+     moveHandler->isFinished = false;
+     moveHandler->source = (Square){-1, -1 };
+     moveHandler->destination = (Square){-1, -1 };
  }
 
 void handleMove(MoveHandler *moveHandler, sfRenderWindow *window, Board board, PieceColour turn) {
