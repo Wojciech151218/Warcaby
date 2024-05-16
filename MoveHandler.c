@@ -45,8 +45,6 @@ bool isSquareOnTheBoard(Square square){
 
  }
  void deselect(MoveHandler * moveHandler) {
-     if(moveHandler->pieceSelected)
-         moveHandler->pieceSelected->isSelected = false;
      moveHandler->pieceSelected = NULL;
      moveHandler->isFinished = false;
      moveHandler->source = (Square){-1, -1 };
