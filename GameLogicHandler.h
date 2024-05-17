@@ -5,6 +5,7 @@
 struct GameLogicHandler {
 	Board * board;
     PieceColour turn;
+    Square capturedSquares[];
 } typedef GameLogicHandler;
 enum MoveDirection{
     TopRight,
@@ -19,7 +20,6 @@ enum MoveDirection{
 void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board, PieceColour turn);
 GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler);
 void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler);
-bool test(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler);
 
 void capture(GameLogicHandler * gameLogicHandler, Square square);
 void makeMove(GameLogicHandler * gameLogicHandler,Square source, Square destination);
@@ -43,6 +43,5 @@ bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler)
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler);
 
 //Algorytm szukania maksymalenej liczby zbic
-void setPossibleSquares(GameLogicHandler,Square squares[],Square currentSquare);
 int getMaxCapture(GameLogicHandler gameLogicHandler, Piece *piece);
 void getMaxCaptureUtil(GameLogicHandler  gameLogicHandler,Board board,int * result,int depth,Square square);

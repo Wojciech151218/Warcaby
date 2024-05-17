@@ -12,53 +12,41 @@ Displayer getDisplayer(Board *board, sfRenderWindow *window){
 }
 
 void display(Displayer * displayer) {
-    sfSprite* sprites[BOARD_SIZE * BOARD_SIZE];
-    sfRectangleShape* squares[BOARD_SIZE * BOARD_SIZE];
+    sfSprite* sprite = sfSprite_create();
+    sfRectangleShape* square = sfRectangleShape_create();
 
     sfTexture* promotedWhiteTexture = displayer->promotedWhiteTexture;
     sfTexture* promotedBlackTexture = displayer->promotedBlackTexture;
     sfTexture* whiteTexture = displayer->whiteTexture;
     sfTexture* blackTexture = displayer->blackTexture;
 
-    int spritesIndex = 0;
-    int squaresIndex = 0;
+    sfRenderWindow_clear(displayer->window, hex_to_sfColor(DARK_TILE_COLOUR));
     for (size_t i = 0; i < BOARD_SIZE; i++) {
         for (size_t j = 0; j < BOARD_SIZE; j++) {
-            squares[squaresIndex] = sfRectangleShape_create();
-            setSquare(squares[squaresIndex++],(i+j)%2 ,i ,j);
+            setSquare(square,(i+j)%2 ,i ,j);
+            sfRenderWindow_drawRectangleShape(displayer->window, square, NULL);
 
-            if (!displayer->board->pieces[i][j]) {
-                sprites[spritesIndex++] = NULL;
-                continue;
-            }
-            sprites[spritesIndex] = sfSprite_create();
+            if (!displayer->board->pieces[i][j]) continue;
+
             Piece * currentPiece = displayer->board->pieces[i][j];
-            if(currentPiece->isPromoted)
-                setSpriteTexture(sprites[spritesIndex], currentPiece->colour==White?promotedWhiteTexture:promotedBlackTexture, i, j);
-            else
-                setSpriteTexture(sprites[spritesIndex], currentPiece->colour == White ? whiteTexture : blackTexture, i,j);
             if(currentPiece->isSelected)
-                setSelectedPiece(sprites[spritesIndex],currentPiece->colour);
-            spritesIndex++;
+                setSelectedPiece(sprite,currentPiece->colour);
+            else
+                sfSprite_setColor(sprite,sfWhite);
+            if(currentPiece->isPromoted)
+                setSpriteTexture(sprite, currentPiece->colour==White?promotedWhiteTexture:promotedBlackTexture, i, j);
+            else
+                setSpriteTexture(sprite, currentPiece->colour == White ? whiteTexture : blackTexture, i,j);
+
+
+            sfRenderWindow_drawSprite(displayer->window, sprite ,NULL);
         }
     }
-    // Clear the window
-    sfRenderWindow_clear(displayer->window, hex_to_sfColor(DARK_TILE_COLOUR));
-
-    // Draw the circle
-    for (size_t i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
-        if (squares[i]) sfRenderWindow_drawRectangleShape(displayer->window, squares[i], NULL);
-        if (sprites[i]) sfRenderWindow_drawSprite(displayer->window, sprites[i], NULL);
-
-    }
-
-    // Display the window
     sfRenderWindow_display(displayer->window);
 
-    for (size_t i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
-        if (squares[i]) sfRectangleShape_destroy(squares[i]);
-        if (sprites[i]) sfSprite_destroy(sprites[i]);
-    }
+    sfRectangleShape_destroy(square);
+    sfSprite_destroy(sprite);
+
 }
 void setSelectedPiece(sfSprite *sprite, PieceColour colour) {
    if(colour == White)
