@@ -5,7 +5,10 @@
 struct GameLogicHandler {
 	Board * board;
     PieceColour turn;
-    Square capturedSquares[];
+    int capturedSquaresCount;
+    Square capturedSquares[BOARD_SIZE*BOARD_SIZE];
+    Piece * pieceCapturing;
+
 } typedef GameLogicHandler;
 enum MoveDirection{
     TopRight,
@@ -18,16 +21,19 @@ enum MoveDirection{
 
 
 void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board, PieceColour turn);
+void copyCapturedSquaresAndCount(GameLogicHandler * gameLogicHandler,Square squares[],int count);
 GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler);
 void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler);
 
-void capture(GameLogicHandler * gameLogicHandler, Square square);
+void capture(GameLogicHandler *gameLogicHandler);
+void addSquareToCapture(GameLogicHandler * gameLogicHandler,Square square);
 void makeMove(GameLogicHandler * gameLogicHandler,Square source, Square destination);
 void promote(GameLogicHandler * gameLogicHandler, Square square);
 
 MoveDirection getMoveDirection(Square source , Square destination, int moveDistance);
 Square getSquareFromMoveDirection(MoveDirection moveDirection);
 Square getFirstOccupiedSquare(GameLogicHandler gameLogicHandler,Square squares[]);
+bool isSquaredAlreadyCaptured(GameLogicHandler *gameLogicHandler, Square square);
 
 bool isMoveForward(MoveDirection moveDirection, Piece *piece);
 bool isSquarePromotable(GameLogicHandler * gameLogicHandler,Square square);
@@ -43,5 +49,6 @@ bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler)
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler);
 
 //Algorytm szukania maksymalenej liczby zbic
-int getMaxCapture(GameLogicHandler gameLogicHandler, Piece *piece);
-void getMaxCaptureUtil(GameLogicHandler  gameLogicHandler,Board board,int * result,int depth,Square square);
+int getGlobalMaxCapture(GameLogicHandler gameLogicHandler);
+int getMaxCapture(GameLogicHandler gameLogicHandler,Square pieceSquare);
+void getMaxCaptureUtil(GameLogicHandler *gameLogicHandler, int *result, int depth, Square square);

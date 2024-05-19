@@ -29,5 +29,6 @@ int distanceBetweenSquares(Square a, Square b);
 
 Square getCurrentSquare(sfRenderWindow* window, sfEvent * event);
 void deselect(MoveHandler * moveHandler);
+void updateAfterCapture(MoveHandler *moveHandler, Square newSource);
 void handleMove(MoveHandler *moveHandler, sfRenderWindow *window, Board board, PieceColour turn);
 void initializeMoveHandler(MoveHandler* moveHandler, sfEvent* event);

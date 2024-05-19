@@ -1,9 +1,18 @@
+
 #include "GameLogicHandler.h"
 
 void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * board, PieceColour turn) {
 	gameLogicHandler->board = board;
     gameLogicHandler->turn = turn;
+    gameLogicHandler->capturedSquaresCount = 0;
 }
+void copyCapturedSquaresAndCount(GameLogicHandler * gameLogicHandler,Square squares[],int count){
+    for (int i = 0; i < count; ++i) {
+        gameLogicHandler->capturedSquares[i] = squares[i];
+    }
+    gameLogicHandler->capturedSquaresCount = count;
+}
+
 GameLogicHandler copyGameLogicHandler(GameLogicHandler gameLogicHandler){
     GameLogicHandler result;
     Board copiedBoard = copyBoard(*gameLogicHandler.board);
@@ -20,35 +29,63 @@ void deleteGameLogicHandler(GameLogicHandler * gameLogicHandler){
 bool isMoveLegal(GameLogicHandler * gameLogicHandler, MoveHandler * moveHandler) {
     if(!moveHandler->isFinished) return false;
 
-    int preMoveCaptureCount = getMaxCapture(*gameLogicHandler, NULL);
-    if(!preMoveCaptureCount){// jesli nie ma bic
+    int maxCaptureCount = getGlobalMaxCapture(*gameLogicHandler);
+    int preMoveCaptureCount = getMaxCapture(*gameLogicHandler,moveHandler->source);
+
+    if(gameLogicHandler->pieceCapturing){
+        maxCaptureCount = preMoveCaptureCount;
+        if(getPiece(*gameLogicHandler->board,moveHandler->source) != gameLogicHandler->pieceCapturing) {
+            deselect(moveHandler);
+            return false;
+        }
+    }
+    if(!maxCaptureCount){// jesli nie ma bic
         if(slideMove(gameLogicHandler,moveHandler->source,moveHandler->destination)) return true;
         deselect(moveHandler);
         return false;
     }
+
+    if(maxCaptureCount != preMoveCaptureCount) {
+        deselect(moveHandler);
+        return false;
+    }
+
     GameLogicHandler * moveTester = malloc( sizeof(GameLogicHandler)) ;
     Board copiedBoard = copyBoard(*gameLogicHandler->board);
     initializeGameLogicHandler(moveTester,&copiedBoard,gameLogicHandler->turn);
+    copyCapturedSquaresAndCount(moveTester,gameLogicHandler->capturedSquares,gameLogicHandler->capturedSquaresCount);
 
-    if(!captureMove(moveTester,moveHandler->source,moveHandler->destination)){//jesli sa bicia ale ruch jest nieprawidłwoy np nie jest biciem
+    if(!captureMove(moveTester,moveHandler->source,moveHandler->destination)){
         free(moveTester);
         deselect(moveHandler);
         return false;
     }
-    int postMoveCaptureCount = getMaxCapture(*moveTester, getPiece(*gameLogicHandler->board,moveHandler->source));
+    int postMoveCaptureCount = getMaxCapture(*moveTester,moveHandler->destination);
     free(moveTester);
 
     if(postMoveCaptureCount+1 == preMoveCaptureCount){//jesli wybierzemy najsilniejsze bicie
-        captureMove(gameLogicHandler,moveHandler->source,moveHandler->destination);
-        return !postMoveCaptureCount;
+        gameLogicHandler->pieceCapturing = getPiece(*gameLogicHandler->board,moveHandler->source);
+
+        if(postMoveCaptureCount) {
+            captureMove(gameLogicHandler, moveHandler->source, moveHandler->destination);
+            updateAfterCapture(moveHandler, moveHandler->destination);
+            return false;
+        }
+        captureMove(gameLogicHandler, moveHandler->source, moveHandler->destination);
+        return true;
+
     }
     return false; //jesli wybierzemy słabsze bicie;
 }
 void executeMove(GameLogicHandler* gameLogicHandler, MoveHandler * moveHandler) {
     if(isSquarePromotable(gameLogicHandler,moveHandler->destination))
         promote(gameLogicHandler,moveHandler->destination);
+    gameLogicHandler->pieceCapturing = NULL;
     gameLogicHandler->turn = !gameLogicHandler->turn;
     deselect(moveHandler);
+    capture(gameLogicHandler);
+    gameLogicHandler->capturedSquaresCount = 0;
+
 }
 bool isMoveForward(MoveDirection moveDirection, Piece * piece){
     if(piece->isPromoted) return  true;
@@ -67,9 +104,21 @@ bool isSquarePromotable(GameLogicHandler * gameLogicHandler,Square square){
 int getPieceRange(Piece piece,bool slide){
     return piece.isPromoted ? BOARD_SIZE : slide ? 1:2 ;
 }
-void capture(GameLogicHandler * gameLogicHandler, Square square){
-    gameLogicHandler->board->pieces[square.x][square.y] = NULL;
+void capture(GameLogicHandler *gameLogicHandler) {
+    for (int i = 0; i < gameLogicHandler->capturedSquaresCount; ++i) {
+        Square square = gameLogicHandler->capturedSquares[i];
+        gameLogicHandler->board->pieces[square.x][square.y] = NULL;
+    }
 }
+void addSquareToCapture(GameLogicHandler * gameLogicHandler,Square square){
+    gameLogicHandler->capturedSquares[gameLogicHandler->capturedSquaresCount++] = square;
+}
+bool isSquaredAlreadyCaptured(GameLogicHandler *gameLogicHandler, Square square){
+    for (int i = 0; i < gameLogicHandler->capturedSquaresCount; ++i)
+        if(equalSquare(gameLogicHandler->capturedSquares[i],square)) return true;
+    return false;
+}
+
 Square getFirstOccupiedSquare(GameLogicHandler gameLogicHandler,Square squares[]){
     for (int i = 0; i < BOARD_SIZE; ++i)
         if(gameLogicHandler.board->pieces[squares[i].x][squares[i].y]) return squares[i];
@@ -143,10 +192,14 @@ bool captureMove(GameLogicHandler * gameLogicHandler,  Square source ,Square des
 
     Square capturedSquare = getFirstOccupiedSquare(*gameLogicHandler,squaresBetween);
     Piece * capturedPiece = getPiece(*gameLogicHandler->board,capturedSquare);
-    if(capturedPiece->colour == sourcePiece->colour) return false;
 
-    capture(gameLogicHandler,capturedSquare);
+    if(capturedPiece->colour == sourcePiece->colour ||
+    isSquaredAlreadyCaptured(gameLogicHandler,capturedSquare)) return false;
+
+
+
     makeMove(gameLogicHandler,source,destination);
+    addSquareToCapture(gameLogicHandler,capturedSquare);
     return true;
 
 }
@@ -173,20 +226,20 @@ bool slideMove(GameLogicHandler * gameLogicHandler,  Square source ,Square desti
 
 
 }
+int getMaxCapture(GameLogicHandler gameLogicHandler,Square pieceSquare){
+    int result =0;
+    getMaxCaptureUtil(&gameLogicHandler, &result, 0, pieceSquare);
+    return result;
+}
 
-int getMaxCapture(GameLogicHandler gameLogicHandler, Piece *piece) {
+int getGlobalMaxCapture(GameLogicHandler gameLogicHandler) {
     int result =0;
     for (int i = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             Square currentSquare = (Square){i,j};
             Piece * currentPiece = getPiece(*gameLogicHandler.board,currentSquare);
-            if(piece){
-                if(currentPiece == piece)
-                    getMaxCaptureUtil(gameLogicHandler,*gameLogicHandler.board,&result,0,currentSquare);
-                continue;
-            }
             if(!currentPiece || currentPiece->colour!= gameLogicHandler.turn) continue;
-            getMaxCaptureUtil(gameLogicHandler,*gameLogicHandler.board,&result,0,currentSquare);
+            getMaxCaptureUtil(&gameLogicHandler, &result, 0, currentSquare);
 
         }
     }
@@ -194,24 +247,26 @@ int getMaxCapture(GameLogicHandler gameLogicHandler, Piece *piece) {
     return result;
 }
 
-void getMaxCaptureUtil(GameLogicHandler  gameLogicHandler,Board board,int * result,int depth,Square square){
+
+void getMaxCaptureUtil(GameLogicHandler *gameLogicHandler, int *result, int depth, Square square) {
     *result = depth> *result ? depth : *result;
 
     Square everyDirection[4]={getSquareFromMoveDirection(TopLeft), getSquareFromMoveDirection(TopRight),
                               getSquareFromMoveDirection(DownLeft), getSquareFromMoveDirection(DownRight)};
-    Piece * currentPiece = getPiece(board,square);
+    Piece * currentPiece = getPiece(*gameLogicHandler->board,square);
     //if(!currentPiece) return;
 
     for (int i = 2; i <= getPieceRange(*currentPiece,false); ++i) {
         for (int j = 0; j < 4; ++j) {
-            Board copiedBoard = copyBoard(board);
+            Board copiedBoard = copyBoard(*gameLogicHandler->board);
             Square nextSquare = plusSquare(square, multiplySquare(everyDirection[j],i));
-            PieceColour currentTurn = gameLogicHandler.turn;
+            PieceColour currentTurn = gameLogicHandler->turn;
             GameLogicHandler nextGameLogicHandler;
             initializeGameLogicHandler(&nextGameLogicHandler,&copiedBoard,currentTurn);
+            copyCapturedSquaresAndCount(&nextGameLogicHandler,gameLogicHandler->capturedSquares,gameLogicHandler->capturedSquaresCount);
 
             if(captureMove(&nextGameLogicHandler,square,nextSquare))
-                getMaxCaptureUtil(gameLogicHandler,copiedBoard,result,depth+1, nextSquare);
+                getMaxCaptureUtil(&nextGameLogicHandler, result, depth + 1, nextSquare);
         }
     }
 

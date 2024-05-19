@@ -53,7 +53,13 @@ bool isSquareOnTheBoard(Square square){
      moveHandler->destination = (Square){-1, -1 };
 
  }
- void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
+void updateAfterCapture(MoveHandler *moveHandler, Square newSource) {
+    moveHandler->isFinished = false;
+    moveHandler->source = newSource;
+    moveHandler->destination = (Square){-1, -1 };
+}
+
+void initializeMoveHandler(MoveHandler* moveHandler, sfEvent * event) {
      moveHandler->event = event;
      moveHandler->pieceSelected = NULL;
      moveHandler->isFinished = false;
