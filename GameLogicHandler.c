@@ -5,6 +5,7 @@ void initializeGameLogicHandler(GameLogicHandler* gameLogicHandler, Board * boar
 	gameLogicHandler->board = board;
     gameLogicHandler->turn = turn;
     gameLogicHandler->capturedSquaresCount = 0;
+    gameLogicHandler->pieceCapturing = NULL;
 }
 void copyCapturedSquaresAndCount(GameLogicHandler * gameLogicHandler,Square squares[],int count){
     for (int i = 0; i < count; ++i) {
