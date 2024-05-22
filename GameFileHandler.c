@@ -1,6 +1,4 @@
-//
-// Created by Wojciech on 14.05.2024.
-//
+
 #include "GameFileHandler.h"
 void initializeGameFileHandler(GameFileHandler * gameFileHandler, Board * board, PieceColour turn){
     char * directoryName = "GameDirectory";

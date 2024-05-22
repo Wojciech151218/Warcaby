@@ -1,6 +1,3 @@
-//
-// Created by Wojciech on 14.05.2024.
-//
 
 #ifndef WARCABY_GAMEFILEHANDLER_H
 #define WARCABY_GAMEFILEHANDLER_H
